@@ -9,6 +9,23 @@ import pydicom as pyd
 import pyinotify
 from keras.models import load_model
 
+'''
+
+
+import argparse
+
+parser = argparse.ArgumentParser(description='pacs address')
+parser.add_argument( 'ip', type = str, help='ip address of pacs')
+parser.add_argument('port', type = str, help='port number of pacs')
+args = parser.parse_args()
+
+def pacs_address(ip, port):
+    return('"%s"' %('dcmsend '+ ip+' '+port))
+    
+# 2 string in format 10.220.19.99 4242 convert to 'dcmsend 10.220.19.99 4242' as string with quote
+    
+ '''
+
 
 def make_predictition(image, model_path='/home/haimin/PycharmProjects/Tensorflow/ddsm_YaroslavNet_s10.h5'):
     image = pyd.dcmread(image).pixel_array/14.5
@@ -98,6 +115,7 @@ def send_folder_to_pacs(folder):
 
     dcm_paths = glob.glob(folder + '/*/*/*.dcm')
     for f in dcm_paths:
+        # comand = pacs_address(args.ip, args.port) + f
         comand = 'dcmsend 3.120.139.162 4242 ' + f
         print(f, '-- sended to pask')
         #os.system(comand)
@@ -178,6 +196,7 @@ class EventHandler(pyinotify.ProcessEvent):
 
 
 if __name__ == '__main__':
+    # print(pacs_address(args.ip, args.port)) # input arguments
 
     wm = pyinotify.WatchManager()  # Watch Manager
     mask = pyinotify.IN_CLOSE_WRITE  # watched events
